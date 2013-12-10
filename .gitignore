@@ -1,0 +1,7 @@
+coverage
+doc
+gems
+Gemfile.lock
+*.txt
+*.bat
+*.html
