@@ -23,12 +23,12 @@ In addition to a representation of the SUT, Attila will also allow the tester to
 ### FAQ ###
 _Q_: Yet another test tool?  
 _A_: __Attila__  won't replace your favourite test tool. The purpose of __Attila__ is to help in the
-the generation of test scripts that are similar to each other. Instead of writing down a large family
+generation of test scripts that are similar to each other. Instead of writing down a large family
 of test scenarios that are basically "variations on the same theme", let do a program compute
 these variations for you. In short, __Attila__ will be a test case generator.
 
-_Q_: Aren't there other test case generators?  
-_A_: Yes. [TODO: provide links]. However, there much less numerous than genuine test tools. 
+_Q_: Aren't there other test case generators in the Galaxy?  
+_A_: Yes. [TODO: provide links]. However, there are much less numerous than genuine test tools. 
 A number of them are pretty expensive and most test case generators have no test script generation
 capabilities (i.e. to them, a test case is limited to a set of values assigned to test variables).
  
@@ -47,7 +47,9 @@ In other words, testers will enter their model and commands in a syntax that is 
 specifically for testers. 
 
 _Q_: Can I use __Attila__ to test systems that are written in other languages?  
-_A_: Yes. __Attila__ is technology and language neutral
+_A_: Yes. __Attila__ is technology and language neutral. __Attila__ will generate test scenarios
+as text files. Any test tool that supports test scenarios in text format could be a potential target
+for __Attila__.
 
 _Q_: Why the name Attila?  
 _A_: There are at least two stories. 
