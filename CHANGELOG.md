@@ -1,3 +1,7 @@
+### 0.0.05 / 2013-12-11
+
+* [FIX] File `.travis.yml`: Removed REE as build environment, since REE doesn't support `require_relative`.
+
 ### 0.0.04 / 2013-12-11
 
 * [CHANGE] File `.rspec`: Show warnings.
