@@ -1,5 +1,6 @@
 Attila
 ===========
+[![Build Status](https://travis-ci.org/famished-tiger/Attila.png?branch=master)](https://travis-ci.org/famished-tiger/Attila)
 
 _A Test design and test case generator tool._  
 [Homepage](https://github.com/famished-tiger/Attila)
