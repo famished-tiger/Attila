@@ -18,11 +18,11 @@ In addition to a representation of the SUT, Attila will also allow the tester to
 * Specify test data generation rules (e.g. pick tester-defined representative values or produce 
  'randomized' data).  
 * Determine the test case generation strategy (e.g. all-pairs).  
-* Use text templates for the generation of the 
+* Use text templates for the generation of the executable test cases.
 
 ### FAQ ###
 _Q_: Yet another test tool?  
-_A_: __Attila__  won't replace your favourite test tool. The purpose of __Attila__ is to help in the
+_A_: Not really, __Attila__  won't replace your favourite test tool. The purpose of __Attila__ is to help in the
 generation of test scripts that are similar to each other. Instead of writing down a large family
 of test scenarios that are basically "variations on the same theme", let do a program compute
 these variations for you. In short, __Attila__ will be a test case generator.
