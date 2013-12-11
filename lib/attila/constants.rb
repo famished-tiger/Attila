@@ -3,7 +3,7 @@
 
 module Attila # Module used as a namespace
   # The version number of the gem.
-  Version = '0.0.03'
+  Version = '0.0.04'
 
   # Brief description of the gem.
   Description = 'Macro-steps for Cucumber'

@@ -1,3 +1,8 @@
+### 0.0.04 / 2013-12-11
+
+* [CHANGE] File `.rspec`: Show warnings.
+* [CHANGE] File `.travis.yml`: Added REE and Rubinius as build environments.
+
 ### 0.0.03 / 2013-12-11
 
 * [NEW] File `Gemfile`: Added Gemfile file for Bundler integration.
