@@ -17,10 +17,28 @@ class Step
   attr_reader(:guard)
   
   # Constructor
-  def initialize(theSnippet, theArguments, theGuard = nil)
+  def initialize(theArguments, theSnippet, theGuard = nil)
+    @arguments = validated_arguments(theArguments)
     @snippet = theSnippet
-    @arguments = theArguments
-    @guard = theGuard
+    @guard = validated_guard(theGuard)
+  end
+  
+  
+  private
+  
+  def validated_arguments(theArgs)
+    return theArgs.dup
+  end
+  
+  def validated_guard(theGuard)
+    if theGuard
+      unless arguments.include? theGuard
+        err_msg = "Guard '#{theGuard.name}' isn't a step argument."
+        fail StandardError, err_msg
+      end
+    end
+  
+    return theGuard
   end
   
 end # class
