@@ -1,3 +1,5 @@
+require_relative 'engine'
+
 # A Step
 # Has one snippet (basic template)
 # Has 0..1 guard  one argument (variable) that specifies the multiplicity of the step.
