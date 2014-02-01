@@ -119,13 +119,13 @@ class Engine
     else
       until scanner.eos?
         # Scan tag at current position...
-        tag_literal = scanner.scan(/<(?:[^\\<>]|\\.)*>/)
+        tag_literal = scanner.scan(/\{\{.*?\}\}/)
         unless tag_literal.nil?
-          result << [:dynamic, tag_literal.gsub(/^<|>$/, '')] 
+          result << [:dynamic, tag_literal.gsub(/^\{\{|\}\}$/, '')] 
         end
         
         # ... or scan plain text at current position
-        literal = scanner.scan(/(?:[^\\<>]|\\.)+/)
+        literal = scanner.scan(/(?:[^\\{}]|\\.)+/)
         result << [:static, literal] unless literal.nil? 
         identify_parse_error(aTextLine) if tag_literal.nil? && literal.nil?
       end
@@ -187,7 +187,7 @@ class Engine
     end
     
     compiled_lines = raw_lines.map { |line| compile_line(line) }
-    return compile_sections(compiled_lines.flatten)
+    return compiled_lines.flatten
   end
   
   
@@ -198,20 +198,14 @@ class Engine
     
     # Apply the rule: when a line just consist of spaces 
     # and a section element, then remove all the spaces from that line.
-    section_item = nil
     line_to_squeeze = line_rep.all? do |item|
-      case item
-      when StaticText
+      if item.kind_of?(StaticText)
         item.source =~ /\s+/
       else
         false
       end
     end
-    if line_to_squeeze && !section_item.nil?
-      line_rep = [section_item]
-    else
-      line_rep_ending(line_rep)
-    end
+    line_rep_ending(line_rep) unless line_to_squeeze
     
     return line_rep
   end
@@ -225,13 +219,7 @@ class Engine
   # then place eoline before that item. 
   # Otherwise, end the line with a eoline marker.  
   def line_rep_ending(theLineRep)
-    if theLineRep.last.is_a?(SectionEndMarker)
-      section_end = theLineRep.pop
-      theLineRep << EOLine.new("\n") # TODO: replace this line
-      theLineRep << section_end
-    else
-      theLineRep << EOLine.new("\n") # TODO: replace this line
-    end  
+    theLineRep << EOLine.new("\n") # TODO: replace this line
   end
 
   

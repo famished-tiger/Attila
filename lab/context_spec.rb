@@ -7,9 +7,9 @@ require_relative 'spec_helper'
 require_relative 'context'
 #require_relative '../../../lib/attila/templating/context'
 
-#module Attila
+module Attila
 
-#module Templating # Open this namespace to get rid of module qualifier prefixes
+module Templating # Open this namespace to get rid of module qualifier prefixes
 
 
 describe Context do
@@ -90,8 +90,8 @@ describe Context do
 
 end # describe
 
-#end # module
+end # module
 
-#end # module
+end # module
 
 # End of file

@@ -7,7 +7,7 @@ require_relative 'engine'
 # Has 0..* arguments (test variables)
 class Step
   # A simple text template that is used to render the step
-  # in the test script format 
+  # in the test script format.
   attr_reader(:snippet)
   
   # The step arguments
@@ -21,8 +21,8 @@ class Step
   # Constructor
   def initialize(theArguments, theSnippet, theGuard = nil)
     @arguments = validated_arguments(theArguments)
-    @snippet = theSnippet
     @guard = validated_guard(theGuard)
+    @snippet = validated_snippet(theSnippet)
   end
   
   
@@ -41,6 +41,26 @@ class Step
     end
   
     return theGuard
+  end
+  
+  
+  def validated_snippet(theSnippet)
+    template = Engine.new.compile(theSnippet)
+    
+    # Check that the variables named in the template are
+    # names of arguments of the step
+    placeholders = template.placeholders()
+    all_names = arguments.map(&:name)
+    
+    placeholders.each do |a_placeholder|
+      var_named = a_placeholder.name
+      unless all_names.include? var_named
+        err_msg = "Step snippet refers to '#{var_named}' which isn't a step argument"
+        fail StandardError, err_msg
+      end
+    end
+    
+    return template
   end
   
 end # class

@@ -19,6 +19,10 @@ require_relative 'unary-element' # Load the superclass
     public
     
     def composite?() false; end
+    
+    def source()
+      '{{' + name + '}}'
+    end
   
   end # class
 

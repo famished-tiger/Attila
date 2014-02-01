@@ -6,11 +6,15 @@ require_relative 'step'
 
 describe Step do
   let(:sample_args) do
-    [double('foo'), double('bar'), double('some_text')]
+    [ OpenStruct.new(name: 'foo'), 
+      OpenStruct.new(name: 'bar'), 
+      OpenStruct.new(name: 'some_text'),
+      OpenStruct.new(name: 'some_locator')
+    ]
   end
   
   let(:sample_snippet) do
-    %Q|  When I fill in "{{some_locator}}" with "{{some_text}}\n"|
+    %Q|  When I fill in "{{some_locator}}" with "{{some_text}}\n|
   end
   
   let(:sample_guard) do
@@ -35,11 +39,12 @@ describe Step do
     it 'should know its arguments' do
       expect(subject.arguments).to eq(sample_args)
     end
-    
+
     it 'should know its snippet' do
-      expect(subject.snippet).to eq(sample_snippet)
+      expect(subject.snippet).to be_kind_of(Template)
+      expect(subject.snippet.source).to eq(sample_snippet)
     end
-    
+
     it 'should know its guard' do
       # Case 1: guard variable is provided
       expect(subject.guard).to eq(sample_guard)
@@ -47,6 +52,7 @@ describe Step do
       # Case 2: no guard variable specified
       instance = Step.new(sample_args, sample_snippet, nil)
       expect(instance.guard).to be_nil      
-    end  
+    end
+   
   end # context
 end # describe
