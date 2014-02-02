@@ -156,25 +156,43 @@ class Engine
   # Raises an exception with the syntax issue identified.
   # @param aTextLine [String] A text line from the template.  
   def self.identify_parse_error(aTextLine)
-    # Unsuccessful scanning: we typically have improperly balanced chevrons.
-    # We will analyze the opening and closing chevrons...
-     # First: replace escaped chevron(s)
-    no_escaped = aTextLine.gsub(/\\[<>]/, '--')
+    # Unsuccessful scanning: we typically have improperly balanced delimiters.
+    # We will analyse the opening and closing delimiters...
+     # First: replace escaped accolade(s)
+    no_escaped = aTextLine.gsub(/\\[\{\}]/, '--')
 
-    # var. equals count_of(<) -  count_of(>): can only be 0 or temporarily 1
+    # var. equals count_of({{) -  count_of(}}): can only be 0 or temporarily 1
     unbalance = 0
+    first_l_accolade = false
+    first_r_accolade = false
 
     no_escaped.each_char do |ch|
       case ch
-      when '<' then unbalance += 1 
-      when '>' then unbalance -= 1              
+      when '{'
+        if first_l_accolade
+          unbalance += 1
+          first_l_accolade = false
+        else
+          first_l_accolade = true
+        end
+        
+      when '}' 
+        if first_r_accolade
+          unbalance -= 1
+          first_r_accolade = false
+        else
+          first_r_accolade = true
+        end
+      else
+        first_l_accolade = false
+        first_r_accolade = false             
       end
       
-      fail(StandardError, "Nested opening chevron '<'.") if unbalance > 1
-      fail(StandardError, "Missing opening chevron '<'.") if unbalance < 0
+      fail(StandardError, "Nested opening pair '{{'.") if unbalance > 1
+      fail(StandardError, "Missing opening pair '{{'.") if unbalance < 0
     end
     
-    fail(StandardError, "Missing closing chevron '>'.") if unbalance == 1 
+    fail(StandardError, "Missing closing pair '}}'.") if unbalance == 1 
   end
   
   

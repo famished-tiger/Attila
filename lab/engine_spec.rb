@@ -144,14 +144,14 @@ SNIPPET
 =end
     it 'should complain if a placeholder misses two closing accolades' do
       sample_text = 'begin {{some_tag end'
-      error_message = "Missing closing chevron '>'."
+      error_message = "Missing closing pair '}}'."
       expect { Engine.parse(sample_text) }.to raise_error(
         StandardError, error_message)
     end
 
     it  'should complain if a text misses an opening chevron' do
-      sample_text = 'begin <some_tag> > end'
-      error_message = "Missing opening chevron '<'."
+      sample_text = 'begin {{some_tag}} }} end'
+      error_message = "Missing opening chevron '{{'."
       expect { Engine.parse(sample_text) }.to raise_error(
         StandardError, error_message)
     end
