@@ -113,21 +113,31 @@ class Engine
   def self.parse(aTextLine)
     scanner = StringScanner.new(aTextLine)
     result = []
+    delimiter_found = false # Was a placeholder just detected?
 
     if scanner.check(/\s*#/)  # Detect comment line
       result << [:comment, aTextLine]
     else
       until scanner.eos?
-        # Scan tag at current position...
-        tag_literal = scanner.scan(/\{\{.*?\}\}/)
-        unless tag_literal.nil?
-          result << [:dynamic, tag_literal.gsub(/^\{\{|\}\}$/, '')] 
+        # Detect placeholder at current position...
+        delimiter_found = scanner.check(/\{\{/)
+        if delimiter_found
+          placeholder = scanner.scan(/\{\{.*?\}\}/)
+          unless placeholder.nil?
+            result << [:dynamic, placeholder.gsub(/^\{\{|\}\}$/, '')]
+          else
+            # No closing accolades found
+            identify_parse_error(aTextLine)
+          end
         end
         
         # ... or scan plain text at current position
-        literal = scanner.scan(/(?:[^\\{}]|\\.)+/)
-        result << [:static, literal] unless literal.nil? 
-        identify_parse_error(aTextLine) if tag_literal.nil? && literal.nil?
+        literal = scanner.scan(/(?:[^{]|(?:\{(?!\{)))+/)
+        if literal.nil?
+          identify_parse_error(aTextLine)
+        else
+          result << [:static, literal] unless literal.nil? 
+        end
       end
     end
 
