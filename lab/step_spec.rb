@@ -26,15 +26,6 @@ describe Step do
     subject do
       Step.new(sample_args, sample_snippet, sample_guard)
     end
-    
-    it "should complain if the guard isn't one of the step argument" do
-      wrong = double('fake')
-      wrong.should_receive(:name).and_return('wrong')
-      
-      err = StandardError
-      err_msg = "Guard 'wrong' isn't a step argument."
-      expect { Step.new(sample_args, sample_snippet, wrong) }.to raise_error(err, err_msg)
-    end
 
     it 'should know its arguments' do
       expect(subject.arguments).to eq(sample_args)
@@ -44,6 +35,13 @@ describe Step do
       expect(subject.snippet).to be_kind_of(Template)
       expect(subject.snippet.source).to eq(sample_snippet)
     end
+    
+    it "should complain if snippet uses a var that isn't one of the step argument" do
+      a_snippet =  %Q|  When I fill in "{{baz}}" with "{{qux}}\n|
+      err = StandardError
+      msg = "Step snippet refers to 'baz' which isn't a step argument"
+      expect { Step.new(sample_args, a_snippet, sample_guard)}.to raise_error(err, msg)
+    end
 
     it 'should know its guard' do
       # Case 1: guard variable is provided
@@ -52,6 +50,15 @@ describe Step do
       # Case 2: no guard variable specified
       instance = Step.new(sample_args, sample_snippet, nil)
       expect(instance.guard).to be_nil      
+    end
+    
+    it "should complain if the guard isn't one of the step argument" do
+      wrong = double('fake')
+      wrong.should_receive(:name).and_return('wrong')
+      
+      err = StandardError
+      err_msg = "Guard 'wrong' isn't a step argument."
+      expect { Step.new(sample_args, sample_snippet, wrong) }.to raise_error(err, err_msg)
     end
    
   end # context
