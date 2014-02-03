@@ -119,9 +119,10 @@ class Engine
       result << [:comment, aTextLine]
     else
       until scanner.eos?
-        # Detect placeholder at current position...
-        delimiter_found = scanner.check(/\{\{/)
-        if delimiter_found
+        loop do
+          # Detect placeholder at current position...
+          delimiter_found = scanner.check(/\{\{/)
+          break unless delimiter_found
           placeholder = scanner.scan(/\{\{.*?\}\}/)
           unless placeholder.nil?
             result << [:dynamic, placeholder.gsub(/^\{\{|\}\}$/, '')]
@@ -129,10 +130,10 @@ class Engine
             # No closing accolades found
             identify_parse_error(aTextLine)
           end
-        end
+        end # loop
         
         # ... or scan plain text at current position
-        literal = scanner.scan(/(?:[^{]|(?:\{(?!\{)))+/)
+        literal = scanner.scan(/(?:[^\\{\}]|\\.|(?:\{(?!\{))|(?:\}(?!\})))+/)
         if literal.nil?
           identify_parse_error(aTextLine)
         else
@@ -158,7 +159,7 @@ class Engine
   def self.identify_parse_error(aTextLine)
     # Unsuccessful scanning: we typically have improperly balanced delimiters.
     # We will analyse the opening and closing delimiters...
-     # First: replace escaped accolade(s)
+    # First: replace escaped accolade(s)
     no_escaped = aTextLine.gsub(/\\[\{\}]/, '--')
 
     # var. equals count_of({{) -  count_of(}}): can only be 0 or temporarily 1

@@ -151,14 +151,14 @@ SNIPPET
 
     it  'should complain if a text misses an opening chevron' do
       sample_text = 'begin {{some_tag}} }} end'
-      error_message = "Missing opening chevron '{{'."
+      error_message = "Missing opening pair '{{'."
       expect { Engine.parse(sample_text) }.to raise_error(
         StandardError, error_message)
     end
 
     it  'should complain if a text has nested opening chevrons' do
-      sample_text = 'begin <<some_tag> > end'
-      error_message = "Nested opening chevron '<'."
+      sample_text = 'begin {{{{some_tag}} }} end'
+      error_message = "Nested opening pair '{{'."
       expect { Engine.parse(sample_text) }.to raise_error(
         StandardError, error_message)
     end
@@ -191,7 +191,7 @@ SNIPPET
     it 'should complain when a placeholder is empty or blank' do
       text_w_empty_arg = sample_template.sub(/userid/, '')
       msg = 'An empty or blank argument occurred in ' +
-        %Q('And I fill in "Username" with "<>"'.)
+        %Q('And I fill in "Username" with "{{}}"'.)
       expect {subject.compile text_w_empty_arg }.to raise_error(
         EmptyArgumentError, msg)
     end

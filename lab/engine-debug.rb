@@ -1,6 +1,6 @@
 require 'pp'
 require_relative 'engine'
 
-sample_text = 'Mary has a {{little lamb'
+sample_text = 'begin {{some_tag}} }} end'
 result = Engine.parse(sample_text)
 pp result
