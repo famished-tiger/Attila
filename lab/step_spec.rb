@@ -62,4 +62,38 @@ describe Step do
     end
    
   end # context
+  
+  context 'Snippet rendering:' do
+    let(:sample_transformer) { Transformer.new(:crlf) }
+    
+    let(:sample_locals) do
+      { 'foo' => 'id=foo', 'bar' => 'Hello world' }
+      
+    end
+  
+    let(:first_snippet) do
+      %Q|  When I fill in "{{foo}}" with "{{bar}}"\n|
+    end
+  
+    it 'should render its snippet in absence of guard' do
+      step = Step.new(sample_args, first_snippet, nil)
+      actual = step.render({},sample_locals, sample_transformer, 1)
+      expected =  %Q|  When I fill in "id=foo" with "Hello world"\r\n|
+      expect(actual).to eq(expected)
+    end
+    
+    it 'should render its snippet when the guard has a value' do
+      step = Step.new(sample_args, first_snippet, sample_guard)
+      actual = step.render({'some_locator' => true}, sample_locals, sample_transformer, 1)
+      expected =  %Q|  When I fill in "id=foo" with "Hello world"\r\n|
+      expect(actual).to eq(expected)
+    end
+    
+    it "should render an empty text when the guard isn't unassigned" do
+      step = Step.new(sample_args, first_snippet, sample_guard)
+      actual = step.render({'some_locator' => nil},sample_locals, sample_transformer, 1)
+      expect(actual).to be_empty
+    end
+
+  end # context
 end # describe
