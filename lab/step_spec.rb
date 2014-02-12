@@ -1,6 +1,6 @@
 require_relative 'spec_helper'
 
-require 'ostruct' # Use OpenStruct instead of dumb 
+require 'ostruct' # Use OpenStruct instead of dumb double
 
 require_relative 'step'
 

@@ -11,7 +11,7 @@ class Procedure
   # Constructor.
   # [theStepSequences] an array of StepSequence
 	def initialize(theStepSequence)
-		@steps = theStepSequences
+		@steps = theStepSequence
 	end
   
   public
@@ -20,8 +20,8 @@ class Procedure
 	# Dependency rule for procedures: a procedure depends only on the test variables (not on the choices)
 	# that are used in the steps.
 	def dependencies(recursive = false)
-		steps_dependencies = step_sequences.reduce([]) do |subresult, a_step|
-			subresult.concat(step.arguments())
+		steps_dependencies = steps.reduce([]) do |subresult, a_step|
+			subresult.concat(a_step.arguments())
 			subresult
 		end
 
