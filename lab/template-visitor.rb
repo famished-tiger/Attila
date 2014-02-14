@@ -11,22 +11,31 @@
     # A factory of enumerators specialized in visiting
     # template(element)s
     class TemplateVisitor
-    
-      class VisitStack
+
+      # Encapsulate the progress of the visit.
+      class VisitState
         attr_reader(:nesting_level)
         attr_reader(:stack)
+          
+        # Yielder. Object that is the client of the enumerator
+        attr_reader(:client)
         
-        
-        def initialize(anInitialLevel)
+        # Queue of visited elements to yield to the client.
+        # For the moment it has length zero.
+        attr_reader(:queue)
+
+
+        def initialize(anInitialLevel, theClient)
           @nesting_level = anInitialLevel
           @stack = []
+          @queue = []
         end
-        
+
         public
         def empty?()
           return @stack.empty?
         end
-        
+
         def push(anElement)
           if anElement.kind_of?(Array)
             stack.push(anElement.dup)  # Use dup to prevent aliasing
@@ -35,30 +44,42 @@
             stack.push(anElement)
           end
         end
- 
 
         def pop()
           top = stack.pop
-          
+
           if top.kind_of?(Array)
             if top.empty?
               @nesting_level -= 1
               element = nil
             else
               element = top.shift()
-              stack.push(top)				
+              stack.push(top)
             end
           else
             element = top
           end
-          
+
           return element
         end
         
+        # Enqueue the given object.
+        def <<(anObject)
+          queue << anObject
+          if queue.size >= max_queue_size()
+            client << queue.pop()
+          end
+        end
+        
+        private
+        def max_queue_size()
+          return 1  # TODO: support longer queue 
+        end
+
       end # class
 
       public
-      
+
       # Three visit events:
       # [:visit, visited_element, current depth]
       # [:before_children, parent, parent depth, child count]
@@ -68,7 +89,7 @@
         visitor = Enumerator.new do |client|	# client is a Yielder
           # Initialization part: execute once
           context = aContext
-          visit_stack = VisitStack.new(aLevel)
+          visit_stack = VisitState.new(aLevel, client)
           visit_stack.push(theRoot)	# The LIFO queue of nodes to visit
           curr_path = []
 
@@ -80,11 +101,11 @@
             else
               element = top
             end
-            
+
             next unless element.visitable?(context)
-            
+
             client << [:visit, element, visit_stack.nesting_level ]	# Return the result
-            
+
             if element.composite?
               client << [:before_children, element, visit_stack.nesting_level, element.children.size]
               curr_path.push(element)
@@ -95,7 +116,7 @@
 
         return visitor
       end
-      
+
 =begin
       # Three visit events:
       # [:visit, visited_element, current depth]
@@ -119,16 +140,16 @@
                 next
               else
                 element = top.shift()
-                visit_stack.push(top)				
+                visit_stack.push(top)
               end
             else
               element = top
             end
-            
+
             next unless element.visitable?(context)
-            
+
             client << [:visit, element, curr_depth ]	# Return the result
-            
+
             if element.composite?
               client << [:before_children, element, curr_depth, element.children.size]
               curr_path.push(element)
