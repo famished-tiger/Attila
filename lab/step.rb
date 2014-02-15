@@ -80,7 +80,7 @@ class Step
     end
     
     if theLocals.include?(guard.name)
-      return locals[guard.name] ? true : false
+      return theLocals[guard.name] ? true : false
     end
     
     return false

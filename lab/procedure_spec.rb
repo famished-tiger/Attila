@@ -2,6 +2,7 @@ require_relative 'spec_helper'
 
 require 'ostruct' # Use OpenStruct instead of dumb double
 
+require_relative 'transformer'
 require_relative 'step'
 require_relative 'procedure'
 
@@ -19,11 +20,11 @@ describe Procedure do
   end
   
   let(:snippet1) do
-    %Q|  When I fill in "{{textbox_user_id}}" with "{{user_id}}\n|
+    %Q|  When I fill in "{{textbox_user_id}}" with "{{user_id}}"\n|
   end
   
   let(:snippet2) do
-    %Q|  When I fill in "{{textbox_password}}" with "{{password}}\n|
+    %Q|  When I fill in "{{textbox_password}}" with "{{password}}"\n|
   end
   
   let(:sample_steps) do
@@ -52,4 +53,21 @@ describe Procedure do
       expect(subject.dependencies).to eq(expected)
     end
   end # context
+  
+  context 'Rendering:' do
+    it 'should render no step when no guard is fulfilled' do
+      xformer = double('fake-transformer')
+      expect(subject.render({}, {}, xformer, 1)).to be_empty
+    end
+    
+    it 'should render all the steps when all the guards are fulfilled' do
+      xformer = Transformer.new
+      assignments = { 'user_id' => 'jdoe', 'password' => 'unguessable'}
+      expected = <<-SNIPPET
+  When I fill in "" with "jdoe"
+  When I fill in "" with "unguessable"
+SNIPPET
+      expect(subject.render({}, assignments, xformer, 1)).to eq(expected)    
+    end
+  end
 end # describe

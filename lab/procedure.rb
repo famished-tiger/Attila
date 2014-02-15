@@ -4,14 +4,15 @@
 # Informally, a procedure is a serie of steps that are required to fulfil 
 # a particular goal.
 # A procedure is an ordered sequence of one or more sequence of steps.
+# TODO: extend with logic-less construct: conditional and repeated sections.
 class Procedure
   # The ordered set of sequences of steps.
 	attr_reader(:steps)
 
   # Constructor.
-  # [theStepSequences] an array of StepSequence
-	def initialize(theStepSequence)
-		@steps = theStepSequence
+  # [theStepSequences] an array of Steps
+	def initialize(theSteps)
+		@steps = theSteps
 	end
   
   public
@@ -29,7 +30,11 @@ class Procedure
 	end
   
   def render(anEnvironment, theLocals, aTransformer, aLevel)
-    return snippet.render(anEnvironment, theLocals, aTransformer, aLevel)
+    result = steps.reduce('') do |subresult, a_step|
+      subresult << a_step.render(anEnvironment, theLocals, aTransformer, aLevel)
+    end
+    
+    return result
   end
 end # class
 
