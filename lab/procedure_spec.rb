@@ -71,3 +71,5 @@ SNIPPET
     end
   end
 end # describe
+
+# End of file
