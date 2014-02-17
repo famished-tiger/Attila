@@ -4,16 +4,13 @@ AllCops:
     - '*/features/**'
     - '*/gems/**'
 
-
-AccessControl:
-  Enabled: false
-
 # This is disabled because some demos use UTF-8
 AsciiComments:
   Enabled: false
 
 CaseIndentation:
-  Enabled: false
+  IndentWhenRelativeTo: end
+  IndentOneStep: true
 
 ClassLength:
   Max: 200
@@ -42,6 +39,7 @@ Encoding:
   
 IndentationWidth :
   Enabled: false
+  
   
 # Avoid methods longer than 50 lines of code
 MethodLength:
