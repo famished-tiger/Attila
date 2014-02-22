@@ -27,7 +27,7 @@ public
 		# Control that the multiplicity value fulfills the multiplicity constraints of the host class
 		hostClass = self.class
 		if hostClass::ForbiddenMultiplicities.include? valid_multiplicity
-			raise ScriptError, "Forbidden multiplicity: #{aMultiplicity} for a #{hostClass}."		
+			raise StandardError, "Forbidden multiplicity: #{aMultiplicity} for a #{hostClass}."		
 		else
 			@multiplicity = valid_multiplicity
 		end
@@ -50,7 +50,7 @@ private
 	def validate_multiplicity(aMultiplicity)
 		case aMultiplicity
 			when Symbol
-				raise ScriptError, "Unknown multiplicity symbol #{aMultiplicity}" unless Repeating::Multiplicities.include? aMultiplicity
+				raise StandardError, "Unknown multiplicity symbol #{aMultiplicity}" unless Repeating::Multiplicities.include? aMultiplicity
 				result = aMultiplicity
 				
 			when 1
@@ -60,7 +60,7 @@ private
 				result = validate_range(aMultiplicity)
 				
 			else
-				raise ScriptError, "Unsupported multiplicity '#{aMultiplicity}'"
+				raise StandardError, "Unsupported multiplicity '#{aMultiplicity}'"
 		end
 		
 		return result
@@ -76,9 +76,9 @@ private
 				# Valid: do nothing...
 
 			when Many
-				raise ScriptError, "multiplicity 'many' can only be used as fallows: 0..many or 1..many "
+				raise StandardError, "multiplicity 'many' can only be used as fallows: 0..many or 1..many "
 			else
-				raise ScriptError, "Unsupported lower multiplicity value: '#{lowerBound}'"
+				raise StandardError, "Unsupported lower multiplicity value: '#{lowerBound}'"
 		end
 		
 		upperBound = aMultiplicity.max
@@ -93,7 +93,7 @@ private
 			when Many
 				result = (lowerBound == 0) ? :zero_or_more : :one_or_more
 			else
-				raise ScriptError, "Unsupported upper multiplicity value: '#{lowerBound}'"
+				raise StandardError, "Unsupported upper multiplicity value: '#{lowerBound}'"
 		end		
 		
 		return result
@@ -102,7 +102,7 @@ private
 	# Hook (callback) method that is invoked when a class includes this module.
 	# We use to check that a host class satisfies the requirement of this module
 	def Repeating::included(includingModuleOrClass)
-		raise ScriptError, "Missing constant named ForbiddenMultiplicities in class #{includingModuleOrClass}." unless includingModuleOrClass.const_defined?(:ForbiddenMultiplicities)
+		raise StandardError, "Missing constant named ForbiddenMultiplicities in class #{includingModuleOrClass}." unless includingModuleOrClass.const_defined?(:ForbiddenMultiplicities)
 	end
 
 end # module

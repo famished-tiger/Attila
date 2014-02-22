@@ -114,7 +114,7 @@ end # class
 		]
 		
 		invalid_ones.each do |bad_syntax|
-			expect { TestingMandatoryMultiplicities.new(bad_syntax) }.to raise_error(ScriptError)
+			expect { TestingMandatoryMultiplicities.new(bad_syntax) }.to raise_error(StandardError)
 		end
 	end
 	
@@ -127,7 +127,7 @@ end # class
 			:none
 		]
 		forbidden_for_mandatory.each do |forbidden|
-			expect { TestingMandatoryMultiplicities.new(forbidden) }.to raise_error(ScriptError)
+			expect { TestingMandatoryMultiplicities.new(forbidden) }.to raise_error(StandardError)
 		end
 		
 		forbidden_for_optional = [
@@ -138,7 +138,7 @@ end # class
 			(1..many),
 		]
 		forbidden_for_optional.each do |forbidden|
-			expect { TestingOptionalMultiplicities.new(forbidden) }.to raise_error(ScriptError)
+			expect { TestingOptionalMultiplicities.new(forbidden) }.to raise_error(StandardError)
 		end		
 	end
 
