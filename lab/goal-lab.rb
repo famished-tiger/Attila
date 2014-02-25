@@ -1,8 +1,18 @@
-
 TestModel = Struct.new(:goals   # All the goals in context
 )
 
 Goal = Struct.new(:name, :statement)
+
+
+# A sequence is a serie of plan elements that are
+# executed in a definite order
+class Sequence
+  attr_reader(:elements)
+  
+  def initialize(theElements)
+    @elements = theElements
+  end
+end # class
 
 
 class CompositeGoal < Goal
@@ -12,6 +22,13 @@ class CompositeGoal < Goal
     super(aName, aStatement)
     @plan = aPlan
   end
+  
+  public
+  
+  def subgoals()
+  end
+  
+  private
 
 end # class
 
@@ -23,10 +40,13 @@ class LeafGoal < Goal
     super(aName, aStatement)
     @procedure = aProcedure
   end
+  
+  public
+  
+  def subgoals()
+    return []
+  end
 end # class
-
-# Plan element
-Sequence = Struct.new(:elements)
 
 
 
@@ -120,6 +140,16 @@ class TestModel
     return new_goal
   end
   
+  # Notify that the goal model is fully populated.
+  def completed()
+  end
+  
+  # Retrieve the topmost, root, goal
+  def main_goal()
+    # TODO: replace naive implementation
+    return goals.values.first
+  end
+  
   private
   def add_goal(aGoal)
     goals[aGoal.name] = aGoal
@@ -130,9 +160,10 @@ end # module
 
 
 module GoalModelBuilder
-  def model(&aBlock)
+  def goal_model(&aBlock)
     t_context = TestModel.new
     t_context.instance_eval(&aBlock)
+    t_context.completed
     return t_context
   end
 

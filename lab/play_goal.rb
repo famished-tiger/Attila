@@ -31,7 +31,7 @@ require_relative 'goal-lab'
 
 # - Terminology: simulate.
 
-test_model = model do
+test_model = goal_model do
 
 composite_goal :log_on, "log onto MyApp with {{credentials}}" do
   plan do
@@ -82,6 +82,13 @@ pp main_goal.plan
 
 sub_goal = test_model.goals[test_model.goals.keys[1]]
 pp sub_goal.procedure
+
+# TODO:
+# -Establish links between goals
+# -Detect missing goals, circular/recursive decomposition.
+# -Detect data dependencies.
+# -Add success outcome
+# -Run base case
 
 
 # End of file
